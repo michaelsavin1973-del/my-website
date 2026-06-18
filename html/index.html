@@ -1,22 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My DevOps Project</title>
+  <title>Task Manager</title>
 </head>
+
 <body>
-    <h1>Hello Frontend</h1>
+  <h1>Task Manager</h1>
 
-    <button onclick="loadAPI()">Call API</button>
+  <input id="taskInput" placeholder="New task">
+  <button onclick="addTask()">Add</button>
 
-    <pre id="output"></pre>
+  <ul id="list"></ul>
 
-    <script>
-        async function loadAPI() {
-            const res = await fetch("/api");
-            const data = await res.json();
-            document.getElementById("output").textContent =
-                JSON.stringify(data, null, 2);
-        }
-    </script>
+<script>
+async function loadTasks() {
+  const res = await fetch("/api/tasks");
+  const data = await res.json();
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(t => {
+    const li = document.createElement("li");
+    li.innerHTML = `${t[1]} 
+      <button onclick="deleteTask(${t[0]})">X</button>`;
+    list.appendChild(li);
+  });
+}
+
+async function addTask() {
+  const title = document.getElementById("taskInput").value;
+
+  await fetch("/api/tasks", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({title})
+  });
+
+  loadTasks();
+}
+
+async function deleteTask(id) {
+  await fetch(`/api/tasks/${id}`, {method: "DELETE"});
+  loadTasks();
+}
+
+loadTasks();
+</script>
+
 </body>
 </html>
