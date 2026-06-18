@@ -1,33 +1,15 @@
-# Docker Flask Nginx Demo
+# Task Manager
 
-Simple DevOps project demonstrating:
+## Start
 
-- Docker Compose
-- Nginx Reverse Proxy
-- Python Flask API
-- Frontend HTML page
-
-## Architecture
-
-Browser
--> Nginx
--> Flask API
-
-## Services
-
-### Web
-
-Nginx frontend available on:
-
-http://localhost:8080
-
-### Backend
-
-Flask API endpoint:
-
-http://localhost:8080/api
-
-## Run
-
-```bash
 docker compose up -d
+
+## Stop
+
+docker compose down
+
+## API
+
+GET /api/tasks
+
+POST /api/tasks

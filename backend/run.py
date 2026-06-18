@@ -4,10 +4,13 @@ from app.db.db import db
 from app.models.task import Task
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://admin:password@db:5432/taskdb"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+import os
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql+psycopg2://admin:secret@db:5432/taskdb"
+    f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:"
+    f"{os.getenv('POSTGRES_PASSWORD')}@db:5432/"
+    f"{os.getenv('POSTGRES_DB')}"
 )
 
 db.init_app(app)
@@ -19,7 +22,7 @@ def health():
     return {"status": "ok"}
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    with app.app_context():
+        db.create_all()
 
-with app.app_context():
-    db.create_all()
+    app.run(host="0.0.0.0", port=5000)

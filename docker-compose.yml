@@ -11,25 +11,29 @@ services:
       - backend
 
   backend:
-     build: ./backend
-     restart: always
-     environment:
-       DB_HOST: db
-       DB_NAME: taskdb
-       DB_USER: admin
-       DB_PASSWORD: secret
-     depends_on:
+    build: ./backend
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+    depends_on:
       - db
+    ports:
+      - "5000:5000"
 
   db:
     image: postgres:16
     restart: always
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: taskdb
+    env_file:
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d taskdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
