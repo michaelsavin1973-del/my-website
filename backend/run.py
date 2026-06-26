@@ -3,6 +3,11 @@ from app.routes.task_routes import task_bp
 from app.db.db import db
 from app.models.task import Task
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -19,6 +24,7 @@ app.register_blueprint(task_bp)
 
 @app.route("/api/health")
 def health():
+    logger.info("Health check called")
     return {"status": "ok"}
 
 if __name__ == "__main__":

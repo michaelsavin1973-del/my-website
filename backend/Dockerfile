@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "run:app"]
+CMD gunicorn --bind 0.0.0.0:5000 --workers 2 --access-logfile - --error-logfile - --log-level info run:app
